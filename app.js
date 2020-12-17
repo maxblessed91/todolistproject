@@ -49,6 +49,7 @@ const tasks = [
   // Events
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler); // 11. Стандартная форма для обработки события
+  listContainer.addEventListener('click', onDeleteHandler); // Обработка событий для удаления
 
   function renderAllTasks(tasksList) {
     if (!tasksList) {
@@ -76,6 +77,8 @@ const tasks = [
       "flex-wrap",
       "mt-2"
     );
+      li.setAttribute('data-task-id', _id);
+
     const span = document.createElement('span');
     span.textContent = title;
     span.style.fontWeight = 'bold';
@@ -126,4 +129,28 @@ const tasks = [
 
     return {...newTask}; // 16. вернуть поверхностную копию задачи
   } // 14. функция создает новый объект задачи и добавлять его в список тасков
+
+  function deleteTask(id) {
+    const {title} = objOfTasks[id];
+    const isConfirm = confirm(`Точно вы хотите удалить задачу: ${title}?`);
+    if (!isConfirm) return isConfirm;
+    delete objOfTasks[id];
+    return isConfirm;
+  } // 25. функция, которая принимает айди задачи, которую нужно удалить и спрашивает точно ли хотите удалить
+
+  function deleteTaskFromHtml(confirmed, el) {
+    if (!confirmed) return;
+    el.remove();
+  } // 27. Полное удаление задачи со страницы
+
+  function onDeleteHandler({target}) {
+    // console.log(e.target); // 21. элемент на котором произойдет событие
+    if (target.classList.contains('delete-btn')) { // 22.если содержит класс, то выполняй
+      const parent = target.closest('[data-task-id]'); // 23. Ищем родителя, у которого есть этот атрибут
+      const id = parent.dataset.taskId; // 24. забираем айди для будущего удаления
+      const confirmed = deleteTask(id); // 26. вызываем функцию для удаления
+      deleteTaskFromHtml(confirmed, parent);
+    }
+  } // 20. функция обработчик удаления
+
 })(tasks);
