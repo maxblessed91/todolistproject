@@ -107,7 +107,7 @@ const tasks = [
     },
   };
 
-  let lastSelectedTheme = 'default'; // 40. Сохраняем последнюю выбранную тему
+  let lastSelectedTheme = localStorage.getItem('app_theme') || 'default'; // 40. Сохраняем последнюю выбранную тему и записываем её в localstorage
 
   // Elements UI
   const listContainer = document.querySelector('.tasks-list-section .list-group');
@@ -118,6 +118,7 @@ const tasks = [
 
 
   // Events
+  setTheme(lastSelectedTheme); // 42. реализуем запись в localstorage необходимое значение
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler); // 11. Стандартная форма для обработки события
   listContainer.addEventListener('click', onDeleteHandler); // Обработка событий для удаления
@@ -235,6 +236,7 @@ const tasks = [
     }
     setTheme(selectedTheme); // 36. если да, то тема изменится
     lastSelectedTheme = selectedTheme;
+    localStorage.setItem('app_theme', selectedTheme); // 40. Записываем значение св-ва в localstorage
   } // 31. функция обработчик события изменения селекта
 
   function setTheme(name) {
